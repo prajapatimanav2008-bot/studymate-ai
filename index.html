@@ -1,0 +1,316 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#3b5bff">
+<meta name="description" content="StudyMate AI — Your Personal AI Study Companion">
+<link rel="manifest" href="manifest.json">
+<title>StudyMate AI — Your Personal AI Study Companion</title>
+<style>
+:root{--bg:#f6f7fb;--surface:#fff;--surface2:#f0f2f7;--text:#172033;--muted:#697386;--line:#e1e5ed;--primary:#3b5bff;--primary2:#2947df;--soft:#e9edff;--green:#159570;--greenSoft:#e4f7f0;--amber:#b97708;--amberSoft:#fff3d9;--red:#d54848;--redSoft:#fdeaea;--purple:#7058d9;--shadow:0 8px 28px rgba(20,30,55,.07);--radius:18px}
+[data-theme=dark]{--bg:#111318;--surface:#191c23;--surface2:#232731;--text:#f1f4fb;--muted:#a2a9b8;--line:#303541;--primary:#7187ff;--primary2:#8799ff;--soft:#252d58;--green:#50d0a6;--greenSoft:#123b30;--amber:#e6b14c;--amberSoft:#403314;--red:#ef7b7b;--redSoft:#421e20;--purple:#9b8ae8;--shadow:0 12px 35px rgba(0,0,0,.28)}
+*{box-sizing:border-box}html,body{margin:0;min-height:100%;font-family:Inter,ui-sans-serif,system-ui,-apple-system,Segoe UI,sans-serif;background:var(--bg);color:var(--text)}button,input,select,textarea{font:inherit}button{cursor:pointer}a{color:inherit}.hidden{display:none!important}
+.app{min-height:100vh}.sidebar{position:fixed;left:0;top:0;bottom:0;width:250px;background:var(--surface);border-right:1px solid var(--line);padding:22px 15px;z-index:20;display:flex;flex-direction:column}.brand{display:flex;gap:11px;align-items:center;padding:5px 9px 24px}.logo{width:38px;height:38px;border-radius:12px;background:linear-gradient(135deg,var(--primary),#7c61e9);display:grid;place-items:center;color:#fff;font-weight:800;box-shadow:0 7px 18px rgba(59,91,255,.24)}.brand b{font-size:16px}.brand small{display:block;color:var(--muted);font-size:10px;margin-top:2px}.nav{display:grid;gap:4px;overflow:auto}.nav button{border:0;background:transparent;color:var(--muted);text-align:left;padding:11px 12px;border-radius:11px;display:flex;gap:11px;align-items:center;font-weight:600;font-size:13px}.nav button:hover{background:var(--surface2);color:var(--text)}.nav button.active{background:var(--soft);color:var(--primary)}.nav .ico{width:21px;text-align:center}.profileMini{margin-top:auto;border-top:1px solid var(--line);padding-top:14px}.profileRow{display:flex;align-items:center;gap:10px;padding:8px}.avatar{width:35px;height:35px;border-radius:50%;background:var(--soft);color:var(--primary);display:grid;place-items:center;font-weight:800}.profileMini button{border:0;background:none;color:var(--muted);font-size:12px;margin-left:auto}.main{margin-left:250px;min-height:100vh}.topbar{height:70px;background:var(--surface);border-bottom:1px solid var(--line);display:flex;align-items:center;gap:14px;padding:0 28px;position:sticky;top:0;z-index:10}.mobileMenu{display:none;border:0;background:var(--surface2);border-radius:10px;padding:9px}.search{flex:1;max-width:540px;position:relative}.search input{width:100%;border:1px solid var(--line);background:var(--surface2);border-radius:12px;padding:10px 13px 10px 38px;color:var(--text);outline:none}.search span{position:absolute;left:13px;top:9px}.topActions{margin-left:auto;display:flex;gap:8px}.iconBtn{border:1px solid var(--line);background:var(--surface);color:var(--text);width:38px;height:38px;border-radius:11px}.content{max-width:1440px;margin:auto;padding:28px}.pageTitle{display:flex;justify-content:space-between;gap:20px;align-items:flex-start;margin-bottom:22px}.pageTitle h1{font-size:28px;margin:0 0 6px}.pageTitle p{margin:0;color:var(--muted);font-size:14px}.grid{display:grid;gap:18px}.stats{grid-template-columns:repeat(4,minmax(0,1fr))}.two{grid-template-columns:1.35fr 1fr}.three{grid-template-columns:repeat(3,minmax(0,1fr))}.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:19px;box-shadow:var(--shadow)}.stat{display:flex;justify-content:space-between;align-items:flex-start}.stat .label{color:var(--muted);font-size:12px;font-weight:700}.stat .num{font-size:26px;font-weight:800;margin-top:7px}.stat .sub{font-size:11px;color:var(--muted);margin-top:5px}.statIcon{font-size:21px;background:var(--surface2);border-radius:12px;padding:9px}.sectionHead{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}.sectionHead h3{font-size:16px}.btn{border:1px solid var(--line);background:var(--surface);color:var(--text);border-radius:10px;padding:9px 13px;font-weight:700;font-size:13px}.btn:hover{background:var(--surface2)}.btn.primary{background:var(--primary);border-color:var(--primary);color:#fff}.btn.primary:hover{background:var(--primary2)}.btn.danger{background:var(--redSoft);border-color:transparent;color:var(--red)}.btn.small{padding:7px 10px;font-size:12px}.btn.success{background:var(--greenSoft);border-color:transparent;color:var(--green)}.tag{display:inline-flex;align-items:center;gap:5px;border-radius:20px;padding:4px 9px;font-size:11px;font-weight:800;background:var(--surface2);color:var(--muted)}.tag.primary{background:var(--soft);color:var(--primary)}.tag.green{background:var(--greenSoft);color:var(--green)}.tag.amber{background:var(--amberSoft);color:var(--amber)}.tag.red{background:var(--redSoft);color:var(--red)}.list{display:grid;gap:10px}.item{border:1px solid var(--line);border-radius:13px;padding:13px;display:flex;gap:12px;align-items:center}.itemMain{flex:1;min-width:0}.itemMain b{font-size:13px}.itemMain p{margin:4px 0 0;color:var(--muted);font-size:12px}.progress{height:7px;background:var(--surface2);border-radius:99px;overflow:hidden}.progress>i{display:block;height:100%;background:var(--primary);border-radius:99px}.hero{background:linear-gradient(135deg,var(--primary),#6552d8);color:#fff;border:0;box-shadow:0 12px 35px rgba(59,91,255,.22)}.hero p{color:rgba(255,255,255,.76)}.hero .btn{background:#fff;color:#263ec6;border-color:#fff}.recommend{display:flex;gap:13px;align-items:flex-start}.recommend .bulb{font-size:24px}.chartBox{height:240px;display:flex;align-items:end;gap:8px;padding:20px 8px 5px}.barCol{flex:1;height:100%;display:flex;flex-direction:column;justify-content:end;align-items:center;gap:6px}.bar{width:100%;max-width:34px;background:linear-gradient(180deg,var(--primary),#8997ff);border-radius:7px 7px 2px 2px;min-height:4px}.barCol small{color:var(--muted);font-size:10px}.subjectGrid{grid-template-columns:repeat(3,minmax(0,1fr))}.subjectCard{position:relative;overflow:hidden}.subjectIcon{font-size:27px}.subjectCard h3{margin:9px 0 4px}.subjectCard p{color:var(--muted);font-size:12px}.subjectCard .progress{margin:13px 0 8px}.chat{height:calc(100vh - 180px);min-height:520px;display:flex;flex-direction:column}.messages{flex:1;overflow:auto;padding:5px 2px 16px;display:grid;align-content:start;gap:14px}.msg{max-width:78%;padding:13px 15px;border-radius:15px;white-space:pre-wrap;font-size:13px;line-height:1.55}.msg.ai{background:var(--surface2);border:1px solid var(--line)}.msg.user{margin-left:auto;background:var(--primary);color:#fff}.quick{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:10px}.composer{display:flex;gap:8px;border-top:1px solid var(--line);padding-top:13px}.composer textarea{flex:1;min-height:45px;max-height:120px;resize:vertical;border:1px solid var(--line);background:var(--surface2);color:var(--text);border-radius:12px;padding:11px;outline:none}.formGrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:13px}.field label{display:block;color:var(--muted);font-size:11px;font-weight:800;margin:0 0 6px}.field input,.field select,.field textarea{width:100%;border:1px solid var(--line);background:var(--surface);color:var(--text);border-radius:10px;padding:10px;outline:none}.field textarea{min-height:100px;resize:vertical}.formActions{display:flex;justify-content:flex-end;gap:8px;margin-top:16px}.modalBack{position:fixed;inset:0;background:rgba(0,0,0,.48);display:grid;place-items:center;padding:18px;z-index:100}.modal{width:min(620px,100%);max-height:90vh;overflow:auto;background:var(--surface);border:1px solid var(--line);border-radius:20px;padding:21px;box-shadow:0 20px 60px rgba(0,0,0,.2)}.modal h2{margin:0 0 5px}.modal p{color:var(--muted);font-size:12px}.toast{position:fixed;right:22px;bottom:22px;background:var(--text);color:var(--bg);padding:12px 15px;border-radius:12px;z-index:200;font-size:13px;box-shadow:var(--shadow)}.timer{display:grid;place-items:center;padding:20px}.clock{font-size:74px;font-weight:800;letter-spacing:-4px;margin:15px 0}.timerRing{width:230px;height:230px;border-radius:50%;display:grid;place-items:center;background:conic-gradient(var(--primary) var(--pct),var(--surface2) 0);position:relative}.timerRing:after{content:"";position:absolute;inset:10px;border-radius:50%;background:var(--surface)}.timerInner{position:relative;z-index:1;text-align:center}.calendar{display:grid;grid-template-columns:repeat(7,1fr);gap:6px}.day{min-height:75px;border:1px solid var(--line);border-radius:10px;padding:7px;background:var(--surface)}.day b{font-size:11px}.day span{display:block;font-size:10px;color:var(--muted);margin-top:6px}.day.today{outline:2px solid var(--primary)}.flash{min-height:270px;display:grid;place-items:center;text-align:center;padding:35px}.flash h2{font-size:25px}.flash .answer{color:var(--muted);line-height:1.6;max-width:600px}.table{width:100%;border-collapse:collapse}.table th,.table td{text-align:left;padding:11px;border-bottom:1px solid var(--line);font-size:12px}.table th{color:var(--muted);font-size:11px}.quizOption{width:100%;text-align:left;border:1px solid var(--line);background:var(--surface);color:var(--text);border-radius:12px;padding:13px;margin:7px 0}.quizOption:hover{background:var(--surface2)}.quizOption.selected{border-color:var(--primary);background:var(--soft)}.quizOption.correct{border-color:var(--green);background:var(--greenSoft)}.quizOption.wrong{border-color:var(--red);background:var(--redSoft)}.notice{padding:12px;border-radius:12px;background:var(--amberSoft);color:var(--amber);font-size:12px}.empty{text-align:center;padding:35px;color:var(--muted)}.login{min-height:100vh;display:grid;place-items:center;padding:20px;background:radial-gradient(circle at 20% 10%,#dfe5ff,transparent 32%),var(--bg)}.loginCard{width:min(460px,100%);background:var(--surface);border:1px solid var(--line);border-radius:24px;padding:30px;box-shadow:var(--shadow)}.loginBrand{text-align:center;margin-bottom:24px}.loginBrand .logo{margin:auto}.loginBrand h1{margin:12px 0 5px}.loginBrand p{color:var(--muted);font-size:13px}.tabs{display:flex;background:var(--surface2);padding:4px;border-radius:11px;margin-bottom:18px}.tabs button{flex:1;border:0;background:none;color:var(--muted);padding:9px;border-radius:8px;font-weight:800;font-size:12px}.tabs button.active{background:var(--surface);color:var(--text);box-shadow:var(--shadow)}.muted{color:var(--muted)}.dangerText{color:var(--red)}@media(max-width:1050px){.stats{grid-template-columns:repeat(2,1fr)}.subjectGrid{grid-template-columns:repeat(2,1fr)}.two{grid-template-columns:1fr}.sidebar{width:220px}.main{margin-left:220px}}@media(max-width:760px){.sidebar{transform:translateX(-100%);transition:.2s;width:270px}.sidebar.open{transform:translateX(0)}.main{margin-left:0}.mobileMenu{display:block}.topbar{padding:0 14px}.content{padding:18px 14px}.stats,.subjectGrid,.three{grid-template-columns:1fr}.formGrid{grid-template-columns:1fr}.pageTitle h1{font-size:23px}.search{display:none}.clock{font-size:55px}.timerRing{width:200px;height:200px}.msg{max-width:90%}.calendar{gap:3px}.day{min-height:58px;padding:5px}.day span{font-size:9px}}
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script>
+const SUBJECTS={
+ Mathematics:{icon:"📐",topics:["Algebra Basics","Quadratic Equations","Trigonometry","Geometry / Triangles","Probability","Calculus Basics"]},
+ Physics:{icon:"⚛️",topics:["Motion","Newton's Laws","Electricity","Energy & Work","Waves & Sound"]},
+ Chemistry:{icon:"🧪",topics:["Periodic Table","Chemical Bonding","Stoichiometry","Acids & Bases","Organic Chemistry Basics"]},
+ Biology:{icon:"🧬",topics:["Photosynthesis","Cell Structure","Genetics","Human Physiology","Ecology"]},
+ English:{icon:"📖",topics:["Grammar Essentials","Essay Writing","Literary Devices","Comprehension"]},
+ "Computer Science":{icon:"💻",topics:["Data Structures","Algorithms","Programming Basics","Databases"]}
+};
+const Q={
+"Quadratic Equations":[
+["What is the standard form of a quadratic equation?",["ax² + bx + c = 0","ax + b = 0","ax³ + bx² + c = 0","a/x + b = 0"],0,"A quadratic equation has the standard form ax² + bx + c = 0, where a ≠ 0."],
+["For 2x² - 4x - 6 = 0, what is the discriminant?",["16","64","-32","8"],1,"D = b² - 4ac = 16 + 48 = 64."],
+["If the discriminant is negative, the equation has:",["Two real roots","One real root","No real roots","Infinite roots"],2,"A negative discriminant means there are no real roots."],
+["The sum of the roots of ax² + bx + c = 0 is -b/a.",["True","False"],0,"This follows from Vieta's formulas."],
+["Solve x² - 5x + 6 = 0.",["x=2,3","x=-2,-3","x=1,6","x=2,-3"],0,"(x-2)(x-3)=0, so x=2 or x=3."]
+],
+"Trigonometry":[
+["In a right triangle, sin(θ) equals:",["Opposite/Hypotenuse","Adjacent/Hypotenuse","Opposite/Adjacent","Hypotenuse/Opposite"],0,"SOH: sine = opposite/hypotenuse."],
+["What is sin(90°)?",["0","1","0.5","Undefined"],1,"sin(90°)=1."],
+["sin²θ + cos²θ = 1 for all θ.",["True","False"],0,"This is the fundamental Pythagorean identity."],
+["tan(θ) in terms of sin and cos is:",["sin+cos","sin×cos","sin/cos","cos/sin"],2,"tan(θ)=sin(θ)/cos(θ)."],
+["The unit circle has radius:",["0","1","2","π"],1,"A unit circle has radius exactly 1."]
+],
+"Geometry / Triangles":[
+["Which criterion uses three equal sides to prove triangle congruence?",["SAS","ASA","SSS","AAS"],2,"SSS means Side-Side-Side."],
+["In a right triangle, c in a²+b²=c² is the:",["Shortest side","Hypotenuse","Height","Base"],1,"The hypotenuse is opposite the right angle."],
+["The interior angles of any triangle sum to 180°.",["True","False"],0,"This is true in Euclidean geometry."],
+["Area of a triangle with base b and height h is:",["bh","bh/2","2bh","b+h"],1,"Area = ½ × base × height."]
+],
+"Algebra Basics":[
+["Solve: 3x + 7 = 22",["x=3","x=5","x=7","x=15"],1,"3x=15, so x=5."],
+["Simplify: 4(x+3)-2x",["2x+12","6x+12","2x+3","4x+6"],0,"4x+12-2x=2x+12."],
+["An inequality such as x>5 has only one solution.",["True","False"],1,"It describes a range of possible values."]
+],
+"Motion":[
+["Velocity is a vector because it has magnitude and direction.",["True","False"],0,"Speed is scalar; velocity includes direction."],
+["Which equation relates v,u,a,t?",["v=u+at","v=u-at²","v=ut+a","v=u/at"],0,"This is the first equation of motion."],
+["Equal distances in equal time intervals means:",["Variable speed","Uniform speed","Zero speed","Negative speed"],1,"Uniform speed is constant speed."]
+],
+"Newton's Laws":[
+["F=ma represents Newton's:",["First Law","Second Law","Third Law","Gravitation"],1,"Newton's Second Law relates force, mass and acceleration."],
+["For every action there is an equal and opposite reaction.",["True","False"],0,"This describes Newton's Third Law."],
+["A 10 kg object accelerates at 2 m/s². Net force?",["5 N","12 N","20 N","0.2 N"],2,"F=ma=10×2=20 N."]
+],
+"Electricity":[
+["Ohm's Law states V equals:",["I/R","I×R","R/I","I+R"],1,"V=IR."],
+["In a series circuit, current is the same at every point.",["True","False"],0,"A series circuit has a single path for current."],
+["Adding resistors in parallel generally:",["Increases total resistance","Decreases total resistance","No change","Doubles voltage"],1,"Parallel paths reduce equivalent resistance."]
+],
+"Energy & Work":[
+["Kinetic energy is:",["mgh","½mv²","Fd","mc²"],1,"Kinetic energy = ½mv²."],
+["Energy can be created or destroyed.",["True","False"],1,"Energy is conserved; it changes form."],
+["Work is zero if displacement is:",["Large","Zero","Negative","Positive"],1,"W=F×d, so zero displacement gives zero work."]
+],
+"Periodic Table":[
+["Elements in the same group commonly have the same number of:",["Neutrons","Valence electrons","Protons","Isotopes"],1,"Group members have related valence-electron configurations."],
+["Atomic number is the number of protons.",["True","False"],0,"Atomic number defines the element."],
+["Across a period, atomic radius generally:",["Increases","Decreases","Stays same","Doubles"],1,"Effective nuclear attraction generally increases."]
+],
+"Chemical Bonding":[
+["Ionic bonds form through:",["Sharing electrons","Transfer of electrons","Sharing protons","Transfer neutrons"],1,"Ionic bonding involves electron transfer and electrostatic attraction."],
+["Covalent bonds involve sharing electron pairs.",["True","False"],0,"Covalent bonding involves shared electrons."],
+["A metal and non-metal typically form a(n):",["Covalent","Ionic","Metallic","Hydrogen"],1,"This is the common introductory model."]
+],
+"Photosynthesis":[
+["Photosynthesis primarily occurs in the:",["Mitochondria","Chloroplast","Nucleus","Ribosome"],1,"Chloroplasts contain chlorophyll and host photosynthetic reactions."],
+["Photosynthesis releases:",["Carbon dioxide","Oxygen","Nitrogen","Only water"],1,"Oxygen is released during photosynthesis."],
+["Photosynthesis can occur with no light at all.",["True","False"],1,"Light energy drives the light-dependent reactions."]
+],
+"Cell Structure":[
+["The 'powerhouse of the cell' is:",["Nucleus","Mitochondria","Ribosome","Golgi"],1,"Mitochondria generate much of the cell's ATP."],
+["Plant cells have a cell wall; animal cells do not.",["True","False"],0,"Plant cell walls are primarily cellulose."],
+["Prokaryotes have a membrane-bound nucleus.",["True","False"],1,"Prokaryotes lack a membrane-bound nucleus."]
+],
+"Grammar Essentials":[
+["Which is a proper noun?",["city","London","river","teacher"],1,"London names a specific place."],
+["'The cake was eaten by her' is:",["Active","Passive","Neutral","Conditional"],1,"The subject receives the action."],
+["Subject-verb agreement means the verb matches the subject's number.",["True","False"],0,"Singular/plural agreement is required."]
+],
+"Literary Devices":[
+["'Her smile was sunshine' is a:",["Simile","Metaphor","Alliteration","Hyperbole"],1,"A metaphor directly compares without like/as."],
+["A simile commonly uses 'like' or 'as'.",["True","False"],0,"This is the defining pattern in basic literary-device study."]
+],
+"Data Structures":[
+["Which follows LIFO?",["Queue","Stack","Array","Linked List"],1,"A stack is Last In, First Out."],
+["A queue follows FIFO.",["True","False"],0,"First In, First Out is the standard queue model."],
+["A singly linked-list node points to:",["Previous node","Next node","Root","Itself"],1,"It stores a reference to the next node."]
+],
+"Algorithms":[
+["Average binary-search time complexity is:",["O(n)","O(log n)","O(n²)","O(1)"],1,"Binary search halves the search space."],
+["Bubble sort has O(n²) worst-case time.",["True","False"],0,"Its repeated comparisons produce quadratic worst-case time."]
+],
+"Programming Basics":[
+["Which is a common loop structure?",["if-loop","for-loop","case-loop","def-loop"],1,"for-loops are a standard iteration construct."],
+["A variable's data type determines what kind of value it stores.",["True","False"],0,"Types constrain values and available operations."]
+]
+};
+const KEY="studymate_v1";
+let state=load();
+function seed(){return{
+user:{name:"Manav",email:"student@example.com",grade:"College",subjects:["Mathematics","Physics","Chemistry","Biology"],goals:"Improve exam performance and understand concepts",studyTime:"Evening",hours:2},
+notes:[
+{id:1,subject:"Mathematics",topic:"Quadratic Equations",title:"Quadratic Equations — Key Formulas",content:"Quadratic formula: x = (-b ± √(b²-4ac)) / 2a\\n\\nDiscriminant D=b²-4ac:\\nD>0 → two distinct real roots\\nD=0 → one repeated real root\\nD<0 → no real roots."},
+{id:2,subject:"Physics",topic:"Motion",title:"Equations of Motion",content:"v = u + at\\ns = ut + ½at²\\nv² = u² + 2as\\n\\nu = initial velocity, v = final velocity, a = acceleration, t = time, s = displacement."}
+],
+quizzes:[
+{subject:"Mathematics",topic:"Algebra Basics",score:88,total:8,date:daysAgo(6)},
+{subject:"Mathematics",topic:"Quadratic Equations",score:80,total:10,date:daysAgo(5)},
+{subject:"Mathematics",topic:"Geometry / Triangles",score:50,total:8,date:daysAgo(4)},
+{subject:"Physics",topic:"Motion",score:80,total:10,date:daysAgo(3)},
+{subject:"Mathematics",topic:"Trigonometry",score:33,total:6,date:daysAgo(2)},
+{subject:"Chemistry",topic:"Periodic Table",score:88,total:8,date:daysAgo(1)}
+],
+sessions:[
+{subject:"Mathematics",topic:"Algebra Basics",duration:32,date:daysAgo(1)},
+{subject:"Physics",topic:"Motion",duration:28,date:daysAgo(2)},
+{subject:"Chemistry",topic:"Periodic Table",duration:35,date:daysAgo(3)},
+{subject:"Biology",topic:"Cell Structure",duration:24,date:daysAgo(4)}
+],
+plan:[
+{subject:"Mathematics",topic:"Quadratic Equations",date:today(),duration:45,priority:"Medium",status:"Pending"},
+{subject:"Physics",topic:"Motion",date:today(),duration:30,priority:"Medium",status:"Pending"},
+{subject:"Mathematics",topic:"Trigonometry",date:today(),duration:25,priority:"High",status:"Pending"},
+{subject:"Mathematics",topic:"Geometry / Triangles",date:addDays(1),duration:30,priority:"High",status:"Pending"},
+{subject:"Chemistry",topic:"Chemical Bonding",date:addDays(1),duration:40,priority:"Low",status:"Pending"},
+{subject:"Mathematics",topic:"Trigonometry",date:addDays(2),duration:35,priority:"High",status:"Pending"}
+],
+exams:[
+{name:"Mathematics Mid-Term",subject:"Mathematics",date:addDays(12),syllabus:["Quadratic Equations","Trigonometry","Geometry / Triangles","Algebra Basics"]},
+{name:"Physics Unit Test",subject:"Physics",date:addDays(19),syllabus:["Motion","Newton's Laws","Energy & Work"]}
+],
+cards:[
+{front:"What is Newton's Second Law?",back:"F = ma. Net force equals mass multiplied by acceleration.",topic:"Newton's Laws",subject:"Physics",status:"review"},
+{front:"What is the quadratic discriminant?",back:"D = b² − 4ac. It helps determine the nature of quadratic roots.",topic:"Quadratic Equations",subject:"Mathematics",status:"new"},
+{front:"What does LIFO mean?",back:"Last In, First Out — the principle used by a stack.",topic:"Data Structures",subject:"Computer Science",status:"new"}
+],
+activities:[{text:"Completed a Trigonometry quiz — 33% accuracy",date:daysAgo(2)},{text:"Created note: Quadratic Equations — Key Formulas",date:daysAgo(2)},{text:"Studied Motion for 28 minutes",date:daysAgo(2)}],
+settings:{theme:"system",notifications:true}
+}}
+function load(){try{return JSON.parse(localStorage.getItem(KEY))||seed()}catch{return seed()}}
+function save(){localStorage.setItem(KEY,JSON.stringify(state))}
+function today(){return new Date().toISOString().slice(0,10)}
+function addDays(n){let d=new Date();d.setDate(d.getDate()+n);return d.toISOString().slice(0,10)}
+function daysAgo(n){return addDays(-n)}
+function esc(s){return String(s??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[m]))}
+function toast(t){let e=document.createElement("div");e.className="toast";e.textContent=t;document.body.appendChild(e);setTimeout(()=>e.remove(),2300)}
+function initials(n){return (n||"S").split(" ").map(x=>x[0]).slice(0,2).join("").toUpperCase()}
+function accuracy(topic){let qs=state.quizzes.filter(q=>q.topic===topic);return qs.length?Math.round(qs.reduce((a,q)=>a+q.score,0)/qs.length):null}
+function weakTopic(){let all=[];state.quizzes.forEach(q=>{let x=all.find(a=>a.topic===q.topic);if(!x){x={topic:q.topic,subject:q.subject,s:0,n:0};all.push(x)}x.s+=q.score;x.n++});all=all.map(x=>({...x,a:Math.round(x.s/x.n)}));return all.sort((a,b)=>a.a-b.a)[0]||{topic:"Trigonometry",subject:"Mathematics",a:33}}
+function level(a){return a>=80?["Strong","green"]:a>=55?["Needs Practice","amber"]:["Weak","red"]}
+function aiReply(message){
+ let m=message.toLowerCase(), w=weakTopic(), topic=null,subject=null;
+ for(const s of Object.keys(SUBJECTS))for(const t of SUBJECTS[s].topics)if(m.includes(t.toLowerCase())){subject=s;topic=t}
+ if(!topic){subject=subject||state.user.subjects[0]||"Mathematics";topic=Object.keys(Q).find(t=>m.includes(t.toLowerCase()))||w.topic}
+ const qs=Q[topic]||[];
+ if(m.includes("quiz")||m.includes("test")) return `Let's practice **${topic}**.\\n\\nTry this without looking anything up:\\n${qs[0]?.[0]||"Explain one key idea from this topic."}\\n\\nSend your answer and I'll explain the reasoning.`;
+ if(m.includes("example")) return `Worked-example approach for **${topic}**:\\n\\n1. Identify the information given.\\n2. Choose the relevant rule or formula.\\n3. Substitute carefully.\\n4. Check whether the result makes sense.\\n\\nFor this topic, start with **${SUBJECTS[subject]?.topics?.includes(topic)?"the core definition":"the key concept"}** and then apply it to a simple case.`;
+ if(m.includes("summar")) return `**Quick revision — ${topic}**\\n\\n${topicConcepts(topic).map(x=>"• "+x).join("\\n")}\\n\\nBest next step: close your notes and explain the main idea in your own words.`;
+ if(m.includes("simply")||m.includes("beginner")) return `**${topic}, simply explained**\\n\\nThink of the topic as a set of connected ideas rather than a list to memorize. Start with the definition, connect it to one example, then practise recalling it without notes.\\n\\nKey ideas:\\n${topicConcepts(topic).slice(0,3).map((x,i)=>`${i+1}. ${x}`).join("\\n")}`;
+ if(m.includes("wrong")||m.includes("mistake")) return `Let's debug the reasoning instead of only giving the answer. For **${topic}**, check:\\n\\n1. What was given?\\n2. Which definition/formula applies?\\n3. Did you substitute correctly?\\n4. Does your final answer match the units or expected form?\\n\\nPaste your working and I can point out the step that needs attention.`;
+ return `Good question. I can help you learn **${topic}** step by step.\\n\\nCore ideas:\\n${topicConcepts(topic).slice(0,4).map((x,i)=>`${i+1}. ${x}`).join("\\n")}\\n\\nTry explaining the first idea back to me in your own words — that turns this from passive reading into active learning.`;
+}
+function topicConcepts(t){
+ const map={
+ "Quadratic Equations":["Standard form ax²+bx+c=0","Discriminant b²−4ac","Quadratic formula","Factoring and completing the square"],
+ "Trigonometry":["Sine, cosine and tangent","Unit circle","Pythagorean identity","Graphs and identities"],
+ "Motion":["Distance vs displacement","Speed vs velocity","Equations of motion","Acceleration"],
+ "Newton's Laws":["Inertia","F=ma","Action and reaction","Free-body diagrams"],
+ "Periodic Table":["Groups and periods","Atomic number and mass","Periodic trends","Metals and non-metals"],
+ "Photosynthesis":["Light-dependent reactions","Calvin cycle","Chlorophyll","Factors affecting rate"]
+ };
+ return map[t]||["Core definition","Key relationships","Typical examples","Common mistakes"];
+}
+let page="dashboard", quiz=null, flashIndex=0, flashFlipped=false, timer={seconds:1500,running:false,mode:"Focus",interval:null}, auth=false;
+function render(){document.getElementById("root").innerHTML=auth?appHTML():loginHTML();if(auth){applyTheme();attach();}else attachLogin()}
+function loginHTML(){return `<div class="login"><div class="loginCard"><div class="loginBrand"><div class="logo">✦</div><h1>StudyMate AI</h1><p>Your Personal AI Study Companion</p></div><div class="tabs"><button class="active">Sign in</button><button onclick="guest()">Guest demo</button></div><div class="field"><label>EMAIL</label><input id="email" value="student@example.com"></div><div class="field" style="margin-top:12px"><label>PASSWORD</label><input id="password" type="password" value="demo123"></div><button class="btn primary" style="width:100%;margin-top:16px" onclick="doLogin()">Sign in</button><p class="muted" style="text-align:center;margin-top:13px">Demo mode uses local browser storage. No real account is created.</p><button class="btn" style="width:100%" onclick="guest()">Explore without account</button></div></div>`}
+function guest(){auth=true;toast("Guest demo started");render()}
+function doLogin(){auth=true;state.user.email=document.getElementById("email").value||state.user.email;save();toast("Welcome back!");render()}
+function appHTML(){return `<div class="app"><aside class="sidebar" id="sidebar"><div class="brand"><div class="logo">✦</div><div><b>StudyMate AI</b><small>Your Personal AI Study Companion</small></div></div><nav class="nav">${navItems().map(([id,ico,label])=>`<button class="${page===id?"active":""}" onclick="go('${id}')"><span class="ico">${ico}</span>${label}</button>`).join("")}</nav><div class="profileMini"><div class="profileRow"><div class="avatar">${initials(state.user.name)}</div><div><b style="font-size:12px">${esc(state.user.name)}</b><div class="muted" style="font-size:10px">${esc(state.user.grade)}</div></div><button onclick="go('settings')">⚙</button></div><button class="btn" style="width:100%;margin-top:5px" onclick="auth=false;render()">Log out</button></div></aside><main class="main"><header class="topbar"><button class="mobileMenu" onclick="document.getElementById('sidebar').classList.toggle('open')">☰</button><div class="search"><span>⌕</span><input id="globalSearch" placeholder="Search notes, topics, quizzes..." oninput="globalSearch(this.value)"></div><div class="topActions"><button class="iconBtn" onclick="toggleTheme()" title="Theme">◐</button><button class="iconBtn" onclick="toast(state.settings.notifications?'Study reminder: Trigonometry is on today’s plan.':'Notifications are off')">🔔</button><button class="iconBtn" onclick="go('settings')">⚙</button></div></header><div class="content">${pageHTML()}</div></main><div id="modal"></div></div>`}
+function navItems(){return [["dashboard","🏠","Dashboard"],["tutor","🤖","AI Tutor"],["subjects","📚","Subjects"],["notes","📝","Notes"],["flashcards","🃏","Flashcards"],["quizzes","🧠","Quizzes"],["planner","📅","Study Planner"],["timer","⏱️","Focus Timer"],["progress","📊","Progress"],["exam","🎯","Exam Prep"],["history","🕘","Study History"],["settings","⚙️","Settings"]]}
+function pageHTML(){
+ switch(page){
+ case"dashboard":return dashboard();
+ case"tutor":return tutor();
+ case"subjects":return subjects();
+ case"notes":return notes();
+ case"flashcards":return flashcards();
+ case"quizzes":return quizzes();
+ case"planner":return planner();
+ case"timer":return timerPage();
+ case"progress":return progress();
+ case"exam":return examPrep();
+ case"history":return historyPage();
+ case"settings":return settingsPage();
+ default:return dashboard()
+ }}
+function title(t,s){return `<div class="pageTitle"><div><h1>${t}</h1><p>${s}</p></div></div>`}
+function dashboard(){
+ let w=weakTopic(), totalMin=state.sessions.reduce((a,s)=>a+s.duration,0), avg=state.quizzes.length?Math.round(state.quizzes.reduce((a,q)=>a+q.score,0)/state.quizzes.length):0;
+ return title(`Good ${new Date().getHours()<12?"morning":new Date().getHours()<18?"afternoon":"evening"}, ${esc(state.user.name)} 👋`,"Let's make progress today.")+`
+ <div class="grid stats">
+ <div class="card stat"><div><div class="label">STUDY TIME</div><div class="num">${Math.floor(totalMin/60)}h ${totalMin%60}m</div><div class="sub">Total logged</div></div><div class="statIcon">⏱️</div></div>
+ <div class="card stat"><div><div class="label">TASKS DONE</div><div class="num">${state.plan.filter(x=>x.status==="Completed").length}</div><div class="sub">Across your plan</div></div><div class="statIcon">✓</div></div>
+ <div class="card stat"><div><div class="label">QUIZ AVERAGE</div><div class="num">${avg}%</div><div class="sub">${state.quizzes.length} quizzes</div></div><div class="statIcon">🧠</div></div>
+ <div class="card stat"><div><div class="label">STREAK</div><div class="num">${streak()} days</div><div class="sub">Keep it going 🔥</div></div><div class="statIcon">🔥</div></div></div>
+ <div class="grid two" style="margin-top:18px">
+ <div class="card"><div class="sectionHead"><h3>Today's Study Plan</h3><button class="btn small" onclick="go('planner')">View planner</button></div><div class="list">${state.plan.filter(x=>x.date===today()).map((x,i)=>planItem(x,i)).join("")||empty("No tasks today.","Open Study Planner to create one.")}</div></div>
+ <div class="card hero"><div class="tag" style="background:rgba(255,255,255,.15);color:#fff">AI RECOMMENDATION</div><h2 style="margin:12px 0 7px">Focus on ${esc(w.topic)}</h2><p>Your lowest tracked topic is ${w.a}%. A short revision session followed by a 5-question quiz is a good next step.</p><button class="btn" onclick="startRecommended('${esc(w.subject)}','${esc(w.topic)}')">Review → Practice → Quiz</button></div></div>
+ <div class="grid two" style="margin-top:18px">
+ <div class="card"><div class="sectionHead"><h3>Upcoming Exams</h3><button class="btn small" onclick="go('exam')">Exam Prep</button></div><div class="list">${state.exams.map(e=>`<div class="item"><div class="avatar">${SUBJECTS[e.subject]?.icon||"🎓"}</div><div class="itemMain"><b>${esc(e.name)}</b><p>${esc(e.subject)} · ${daysUntil(e.date)} days remaining</p></div><span class="tag ${daysUntil(e.date)<=7?"red":"primary"}">${fmt(e.date)}</span></div>`).join("")}</div></div>
+ <div class="card"><div class="sectionHead"><h3>Recent Activity</h3><button class="btn small" onclick="go('history')">See all</button></div><div class="list">${state.activities.slice(-4).reverse().map(a=>`<div class="item"><span>•</span><div class="itemMain"><b>${esc(a.text)}</b><p>${fmt(a.date)}</p></div></div>`).join("")}</div></div></div>`;
+}
+function planItem(x,i){return `<div class="item"><div class="avatar">${SUBJECTS[x.subject]?.icon||"📚"}</div><div class="itemMain"><b>${esc(x.subject)} · ${esc(x.topic)}</b><p>${x.duration} minutes · <span class="tag ${x.priority==="High"?"red":x.priority==="Medium"?"amber":"green"}">${x.priority}</span></p></div>${x.status==="Completed"?'<span class="tag green">✓ Done</span>':`<button class="btn small success" onclick="completePlan(${i})">✓ Mark Complete</button>`}</div>`}
+function empty(a,b){return `<div class="empty"><b>${a}</b><div style="margin-top:5px">${b}</div></div>`}
+function tutor(){return title("AI Tutor","Learn concepts, practise actively, and understand your mistakes.")+
+`<div class="card chat"><div class="messages" id="messages"><div class="msg ai">Hi ${esc(state.user.name)}! 👋 I’m your StudyMate AI tutor. Ask me about Math, Physics, Chemistry, Biology, English, or Computer Science.<br><br>Try: “Explain quadratic equations simply.”</div></div><div class="quick">${["Explain Simply","Give Example","Quiz Me","Summarize","Practice Questions","Explain Step-by-Step"].map(x=>`<button class="btn small" onclick="quickTutor('${x}')">${x}</button>`).join("")}</div><div class="composer"><textarea id="tutorInput" placeholder="Ask a study question..."></textarea><button class="btn primary" onclick="sendTutor()">Send</button></div></div>`}
+function sendTutor(){let el=document.getElementById("tutorInput"),m=el.value.trim();if(!m)return;addMessage(m,"user");el.value="";setTimeout(()=>addMessage(aiReply(m),"ai"),300)}
+function quickTutor(x){document.getElementById("tutorInput").value=x+" about "+weakTopic().topic;sendTutor()}
+function addMessage(t,c){let box=document.getElementById("messages");if(!box)return;let d=document.createElement("div");d.className="msg "+c;d.textContent=t;box.appendChild(d);box.scrollTop=box.scrollHeight}
+function subjects(){return title("Subjects","Explore the built-in academic topic database and jump straight into learning.")+
+`<div class="grid subjectGrid">${Object.entries(SUBJECTS).map(([s,d])=>{let vals=d.topics.map(t=>accuracy(t)).filter(x=>x!==null);let a=vals.length?Math.round(vals.reduce((x,y)=>x+y,0)/vals.length):0;return `<div class="card subjectCard"><div class="subjectIcon">${d.icon}</div><h3>${s}</h3><p>${d.topics.length} topics · ${a? a+"% tracked accuracy":"Not started"}</p><div class="progress"><i style="width:${a}%"></i></div><button class="btn primary small" onclick="subjectModal('${esc(s)}')">View topics</button></div>`}).join("")}</div>`}
+function subjectModal(s){let d=SUBJECTS[s];modal(`<h2>${d.icon} ${esc(s)}</h2><p>Choose a topic to learn, quiz, or revise.</p><div class="list" style="margin-top:15px">${d.topics.map(t=>{let a=accuracy(t);return `<div class="item"><div class="itemMain"><b>${esc(t)}</b><p>${a===null?"No attempts yet":a+"% quiz accuracy"}</p></div><button class="btn small" onclick="openTutorTopic('${esc(t)}');closeModal()">Tutor</button><button class="btn primary small" onclick="newQuiz('${esc(s)}','${esc(t)}');closeModal()">Quiz</button></div>`}).join("")}</div>`)}
+function openTutorTopic(t){page="tutor";render();setTimeout(()=>{document.getElementById("tutorInput").value="Explain "+t+" simply";sendTutor()},50)}
+function notes(){return title("Smart Notes","Create, search, pin, and use AI actions on your study notes.")+
+`<div class="card"><div class="sectionHead"><h3>Your Notes</h3><button class="btn primary" onclick="noteModal()">＋ New Note</button></div><div class="list">${state.notes.map((n,i)=>`<div class="item"><div class="itemMain"><b>${n.pinned?"📌 ":""}${esc(n.title)}</b><p>${esc(n.subject)} · ${esc(n.topic)} · ${n.content.length} characters</p></div><button class="btn small" onclick="aiNote(${i},'summarize')">Summarize</button><button class="btn small" onclick="aiNote(${i},'flash')">Flashcards</button><button class="btn small" onclick="noteModal(${i})">Edit</button><button class="btn danger small" onclick="deleteNote(${i})">Delete</button></div>`).join("")||empty("No notes yet.","Create your first study note.")}</div></div>`}
+function noteModal(i){let n=i==null?{subject:"Mathematics",topic:"",title:"",content:""}:state.notes[i];modal(`<h2>${i==null?"Create Note":"Edit Note"}</h2><p>Keep important ideas organized by subject and topic.</p><div class="formGrid" style="margin-top:15px"><div class="field"><label>SUBJECT</label><select id="nsub">${Object.keys(SUBJECTS).map(s=>`<option ${s===n.subject?"selected":""}>${s}</option>`).join("")}</select></div><div class="field"><label>TOPIC</label><input id="ntopic" value="${esc(n.topic)}"></div><div class="field" style="grid-column:1/-1"><label>TITLE</label><input id="ntitle" value="${esc(n.title)}"></div><div class="field" style="grid-column:1/-1"><label>CONTENT</label><textarea id="ncontent">${esc(n.content)}</textarea></div></div><div class="formActions"><button class="btn" onclick="closeModal()">Cancel</button><button class="btn primary" onclick="saveNote(${i==null?"null":i})">Save Note</button></div>`)}
+function saveNote(i){let n={subject:document.getElementById("nsub").value,topic:document.getElementById("ntopic").value||"General",title:document.getElementById("ntitle").value||"Untitled Note",content:document.getElementById("ncontent").value};if(i===null){state.notes.push(n);state.activities.push({text:"Created note: "+n.title,date:today()})}else state.notes[i]={...state.notes[i],...n};save();closeModal();toast("Note saved");render()}
+function deleteNote(i){if(confirm("Delete this note?")){state.notes.splice(i,1);save();render();toast("Note deleted")}}
+function aiNote(i,type){let n=state.notes[i];if(type==="flash"){state.cards.push({front:"Key idea from: "+n.title,back:n.content.slice(0,450),topic:n.topic,subject:n.subject,status:"new"});save();toast("Flashcard created from note")}else modal(`<h2>AI Summary</h2><p>${esc(n.title)}</p><div class="card" style="margin-top:14px;background:var(--surface2)">${esc(n.content.slice(0,900))}</div><div class="notice" style="margin-top:12px">Demo AI summarizes locally from the text you provided.</div>`)}
+function flashcards(){let c=state.cards[flashIndex%Math.max(state.cards.length,1)];return title("Flashcards","Use active recall. Cards marked Review return sooner.")+
+(c?`<div class="card flash" onclick="flipCard()"><span class="tag primary">${esc(c.subject)} · ${esc(c.topic)}</span>${!flashFlipped?`<h2>${esc(c.front)}</h2><p class="muted">Click to flip</p>`:`<div><h2>Answer</h2><p class="answer">${esc(c.back)}</p></div>`}</div><div style="display:flex;justify-content:center;gap:8px;margin-top:14px"><button class="btn danger" onclick="cardRate('again')">Again</button><button class="btn" onclick="cardRate('review')">Review</button><button class="btn primary" onclick="cardRate('know')">Know ✓</button><button class="btn" onclick="shuffleCards()">Shuffle</button></div>`:empty("No flashcards yet.","Generate cards from a note or create a deck.") )+
+`<div class="card" style="margin-top:18px"><div class="sectionHead"><h3>Deck</h3><button class="btn primary small" onclick="generateCards()">＋ Generate with AI</button></div><div class="list">${state.cards.map((x,i)=>`<div class="item"><div class="itemMain"><b>${esc(x.front)}</b><p>${esc(x.subject)} · ${esc(x.topic)}</p></div><span class="tag ${x.status==="review"?"red":x.status==="known"?"green":"primary"}">${x.status}</span></div>`).join("")}</div></div>`}
+function flipCard(){flashFlipped=!flashFlipped;render()}
+function cardRate(r){if(!state.cards.length)return;let c=state.cards[flashIndex%state.cards.length];c.status=r==="know"?"known":r==="review"?"review":"new";flashIndex=(flashIndex+1)%state.cards.length;flashFlipped=false;save();render()}
+function shuffleCards(){flashIndex=Math.floor(Math.random()*Math.max(state.cards.length,1));flashFlipped=false;render()}
+function generateCards(){let w=weakTopic(), qs=Q[w.topic]||[];qs.slice(0,4).forEach(q=>state.cards.push({front:q[0],back:q[3],topic:w.topic,subject:w.subject,status:"new"}));save();render();toast("AI flashcards generated")}
+function quizzes(){if(quiz)return quizHTML();return title("Quizzes","Generate practice quizzes, get explanations, and turn results into targeted revision.")+
+`<div class="grid three"><div class="card"><div class="statIcon">⚡</div><h3>Quick Quiz</h3><p class="muted">5 questions on a topic.</p><button class="btn primary" onclick="quizModal()">Create Quiz</button></div><div class="card"><div class="statIcon">🎓</div><h3>Exam Level</h3><p class="muted">Timed, exam-style practice.</p><button class="btn" onclick="quizModal(true)">Start Mock Quiz</button></div><div class="card"><div class="statIcon">🎯</div><h3>Weak Topic</h3><p class="muted">Focus on ${esc(weakTopic().topic)}.</p><button class="btn" onclick="newQuiz('${esc(weakTopic().subject)}','${esc(weakTopic().topic)}')">Practice Weak Topic</button></div></div>
+ <div class="card" style="margin-top:18px"><div class="sectionHead"><h3>Quiz History</h3></div><table class="table"><tr><th>SUBJECT</th><th>TOPIC</th><th>SCORE</th><th>DATE</th></tr>${state.quizzes.slice().reverse().map(q=>`<tr><td>${esc(q.subject)}</td><td>${esc(q.topic)}</td><td><b>${q.score}%</b></td><td>${fmt(q.date)}</td></tr>`).join("")}</table></div>`}
+function quizModal(mock=false){modal(`<h2>${mock?"Mock Test":"Create Quiz"}</h2><p>Questions are generated from StudyMate's academic question bank for this demo.</p><div class="formGrid" style="margin-top:15px"><div class="field"><label>SUBJECT</label><select id="qsub">${Object.keys(SUBJECTS).map(s=>`<option>${s}</option>`).join("")}</select></div><div class="field"><label>TOPIC</label><select id="qtopic">${Object.values(SUBJECTS)[0].topics.map(t=>`<option>${t}</option>`).join("")}</select></div><div class="field"><label>QUESTIONS</label><select id="qcount"><option>5</option><option>10</option></select></div><div class="field"><label>DIFFICULTY</label><select id="qdiff"><option>Medium</option><option>Easy</option><option>Hard</option><option>Exam Level</option></select></div></div><div class="formActions"><button class="btn" onclick="closeModal()">Cancel</button><button class="btn primary" onclick="createQuizFromModal()">Start</button></div>`)}
+function createQuizFromModal(){newQuiz(document.getElementById("qsub").value,document.getElementById("qtopic").value,Number(document.getElementById("qcount").value));closeModal()}
+function newQuiz(subject,topic,count=5){let bank=Q[topic]||[];if(!bank.length){toast("This topic has no demo questions yet.");return}let arr=[];for(let i=0;i<count;i++)arr.push(bank[i%bank.length]);quiz={subject,topic,questions:arr,idx:0,answers:[],score:0,started:Date.now()};page="quizzes";render()}
+function quizHTML(){let q=quiz.questions[quiz.idx],answered=quiz.answers[quiz.idx]!=null;return title("Interactive Quiz",`${esc(quiz.subject)} · ${esc(quiz.topic)}`)+`<div class="card"><div class="sectionHead"><span class="tag primary">Question ${quiz.idx+1} / ${quiz.questions.length}</span><span class="muted">${Math.round((quiz.idx/quiz.questions.length)*100)}% complete</span></div><div class="progress"><i style="width:${((quiz.idx)/quiz.questions.length)*100}%"></i></div><h2 style="margin:24px 0 12px">${esc(q[0])}</h2><div>${q[1].map((o,i)=>`<button class="quizOption ${answered?(i===q[2]?"correct":quiz.answers[quiz.idx]===i?"wrong":""):(quiz.answers[quiz.idx]===i?"selected":"")}" onclick="answerQuiz(${i})" ${answered?"disabled":""}>${String.fromCharCode(65+i)}. ${esc(o)}</button>`).join("")}</div>${answered?`<div class="notice" style="margin-top:14px;background:${quiz.answers[quiz.idx]===q[2]?"var(--greenSoft)":"var(--redSoft)"};color:${quiz.answers[quiz.idx]===q[2]?"var(--green)":"var(--red)"}"><b>${quiz.answers[quiz.idx]===q[2]?"Correct!":"Not quite."}</b> ${esc(q[3])}</div><button class="btn primary" style="margin-top:14px" onclick="nextQuiz()">${quiz.idx===quiz.questions.length-1?"See Result":"Next Question →"}</button>`:""} </div>`}
+function answerQuiz(i){if(quiz.answers[quiz.idx]!=null)return;quiz.answers[quiz.idx]=i;render()}
+function nextQuiz(){if(quiz.idx<quiz.questions.length-1){quiz.idx++;render()}else finishQuiz()}
+function finishQuiz(){let correct=quiz.answers.reduce((n,a,i)=>n+(a===quiz.questions[i][2]?1:0),0),score=Math.round(correct/quiz.questions.length*100);state.quizzes.push({subject:quiz.subject,topic:quiz.topic,score,total:quiz.questions.length,date:today()});state.activities.push({text:`Completed a ${quiz.topic} quiz — ${score}% accuracy`,date:today()});save();let result={...quiz,correct,score};quiz=null;modal(`<h2>Quiz Result 🎉</h2><p>${esc(result.topic)}</p><div class="grid three" style="margin-top:15px"><div class="card"><b>Score</b><h2>${result.score}%</h2></div><div class="card"><b>Correct</b><h2>${result.correct}/${result.questions.length}</h2></div><div class="card"><b>Time</b><h2>${Math.max(1,Math.round((Date.now()-result.started)/60000))}m</h2></div></div><div class="card" style="margin-top:14px"><b>Performance Analysis</b><p class="muted" style="margin-top:7px">${result.score>=80?"Strong performance. Try a harder quiz next.":result.score>=55?"You understand the basics. Review missed questions and practise again.":"This is a priority revision area. Review the topic, use flashcards, then retake a short quiz."}</p></div><div class="formActions"><button class="btn" onclick="closeModal();render()">Done</button><button class="btn primary" onclick="closeModal();go('planner')">Add Revision to Plan</button></div>`);render()}
+function planner(){return title("Study Planner","A realistic plan connecting weak topics, exams, and available study time.")+
+`<div class="grid two"><div class="card"><div class="sectionHead"><h3>Today's Tasks</h3><button class="btn primary small" onclick="taskModal()">＋ Add Task</button></div><div class="list">${state.plan.filter(x=>x.date===today()).map((x,i)=>planItem(x,i)).join("")||empty("No tasks today.","Add a task.")}</div></div><div class="card hero"><span class="tag" style="background:rgba(255,255,255,.15);color:#fff">SMART PLAN</span><h2 style="margin:12px 0 6px">AI plan suggestion</h2><p>Prioritize ${esc(weakTopic().topic)} because your current tracked accuracy is ${weakTopic().a}%. Then test recall with a short quiz.</p><button class="btn" onclick="addRecommendedTask()">＋ Add 20-min revision</button></div></div>
+ <div class="card" style="margin-top:18px"><div class="sectionHead"><h3>Upcoming Schedule</h3></div><div class="calendar">${calendarDays().map(d=>`<div class="day ${d===today()?"today":""}"><b>${fmt(d)}</b>${state.plan.filter(x=>x.date===d).slice(0,2).map(x=>`<span>📚 ${esc(x.topic)}</span>`).join("")}${state.exams.filter(x=>x.date===d).map(x=>`<span>🎯 ${esc(x.name)}</span>`).join("")}</div>`).join("")}</div></div>`}
+function calendarDays(){return Array.from({length:21},(_,i)=>addDays(i))}
+function completePlan(i){let items=state.plan.filter(x=>x.date===today()),x=items[i];if(!x)return;x.status="Completed";state.sessions.push({subject:x.subject,topic:x.topic,duration:x.duration,date:today()});state.activities.push({text:`Studied ${x.topic} for ${x.duration} minutes`,date:today()});save();render();toast("Task completed — study time updated")}
+function taskModal(){modal(`<h2>Add Study Task</h2><div class="formGrid" style="margin-top:15px"><div class="field"><label>SUBJECT</label><select id="tsub">${Object.keys(SUBJECTS).map(s=>`<option>${s}</option>`).join("")}</select></div><div class="field"><label>TOPIC</label><input id="ttopic" placeholder="e.g. Trigonometry"></div><div class="field"><label>DATE</label><input id="tdate" type="date" value="${today()}"></div><div class="field"><label>DURATION (MIN)</label><input id="tdur" type="number" value="30"></div></div><div class="formActions"><button class="btn" onclick="closeModal()">Cancel</button><button class="btn primary" onclick="saveTask()">Add</button></div>`)}
+function saveTask(){state.plan.push({subject:document.getElementById("tsub").value,topic:document.getElementById("ttopic").value||"General",date:document.getElementById("tdate").value,duration:Number(document.getElementById("tdur").value)||30,priority:"Medium",status:"Pending"});save();closeModal();render();toast("Task added")}
+function addRecommendedTask(){let w=weakTopic();state.plan.push({subject:w.subject,topic:w.topic,date:today(),duration:20,priority:"High",status:"Pending"});save();render();toast("AI revision task added")}
+function startRecommended(s,t){openTutorTopic(t)}
+function examPrep(){return title("Exam Preparation","Turn an exam date and syllabus into a focused preparation workflow.")+
+`<div class="grid two">${state.exams.map((e,i)=>`<div class="card"><div class="sectionHead"><span class="tag primary">EXAM</span><span class="tag ${daysUntil(e.date)<=7?"red":"amber"}">${daysUntil(e.date)} days</span></div><h2>${esc(e.name)}</h2><p class="muted">${esc(e.subject)} · ${fmt(e.date)}</p><div style="margin:15px 0"><b style="font-size:12px">Syllabus</b><div class="quick" style="margin-top:8px">${e.syllabus.map(x=>`<span class="tag">${esc(x)}</span>`).join("")}</div></div><div class="notice">Recommended: revise weak topics first, then complete a mock quiz.</div><div class="formActions"><button class="btn" onclick="openTutorTopic('${esc(e.syllabus[0])}')">Start Learning</button><button class="btn primary" onclick="newQuiz('${esc(e.subject)}','${esc(e.syllabus[0])}',5)">Mock Quiz</button></div></div>`).join("")}</div><div class="card" style="margin-top:18px"><div class="sectionHead"><h3>Create Exam</h3><button class="btn primary small" onclick="examModal()">＋ Add Exam</button></div></div>`}
+function examModal(){modal(`<h2>Add Exam</h2><div class="formGrid" style="margin-top:15px"><div class="field"><label>EXAM NAME</label><input id="ename" placeholder="Mathematics Mid-Term"></div><div class="field"><label>SUBJECT</label><select id="esub">${Object.keys(SUBJECTS).map(s=>`<option>${s}</option>`).join("")}</select></div><div class="field"><label>EXAM DATE</label><input id="edate" type="date" value="${addDays(14)}"></div><div class="field"><label>SYLLABUS</label><input id="esyl" placeholder="Topic 1, Topic 2, Topic 3"></div></div><div class="formActions"><button class="btn" onclick="closeModal()">Cancel</button><button class="btn primary" onclick="saveExam()">Add Exam</button></div>`)}
+function saveExam(){state.exams.push({name:document.getElementById("ename").value||"New Exam",subject:document.getElementById("esub").value,date:document.getElementById("edate").value,syllabus:document.getElementById("esyl").value.split(",").map(x=>x.trim()).filter(Boolean)});save();closeModal();render();toast("Exam added")}
+function timerPage(){let mins=Math.floor(timer.seconds/60).toString().padStart(2,"0"),secs=(timer.seconds%60).toString().padStart(2,"0"),pct=timer.mode==="Focus"?((1500-timer.seconds)/1500*100):((300-timer.seconds)/300*100);return title("Focus Timer","Protect your attention and log completed study sessions.")+
+`<div class="grid two"><div class="card timer"><span class="tag primary">${timer.mode}</span><div class="timerRing" style="--pct:${Math.max(0,Math.min(100,pct))}%"><div class="timerInner"><div class="clock">${mins}:${secs}</div><div class="muted">Focus session</div></div></div><div class="quick" style="justify-content:center;margin-top:15px"><button class="btn ${timer.running?"":"primary"}" onclick="toggleTimer()">${timer.running?"Pause":"Start"}</button><button class="btn" onclick="resetTimer()">Reset</button><button class="btn" onclick="setTimer(1500,'Focus')">25 min</button><button class="btn" onclick="setTimer(300,'Break')">5 min break</button><button class="btn" onclick="setTimer(3000,'Focus')">50 min</button></div></div><div class="card"><h3>Current Study Task</h3><p class="muted">Choose what this focus session is for.</p><div class="field" style="margin-top:14px"><label>SUBJECT</label><select id="timSub">${Object.keys(SUBJECTS).map(s=>`<option>${s}</option>`).join("")}</select></div><div class="field" style="margin-top:12px"><label>TOPIC</label><input id="timTopic" value="${esc(weakTopic().topic)}"></div><div class="notice" style="margin-top:14px">When a focus session finishes, StudyMate logs it as study time and updates progress.</div></div></div>`}
+function toggleTimer(){timer.running=!timer.running;if(timer.running){clearInterval(timer.interval);timer.interval=setInterval(()=>{if(timer.seconds>0){timer.seconds--;if(page==="timer")render()}else{timer.running=false;clearInterval(timer.interval);logTimer();toast("Focus session complete! 🎉")}},1000)}else clearInterval(timer.interval);render()}
+function resetTimer(){timer.running=false;clearInterval(timer.interval);timer.seconds=timer.mode==="Break"?300:1500;render()}
+function setTimer(s,m){timer.running=false;clearInterval(timer.interval);timer.seconds=s;timer.mode=m;render()}
+function logTimer(){let s=document.getElementById("timSub")?.value||state.user.subjects[0]||"Mathematics",t=document.getElementById("timTopic")?.value||weakTopic().topic;let d=Math.round((timer.mode==="Focus"?1500:300)/60);if(timer.mode==="Focus"){state.sessions.push({subject:s,topic:t,duration:d,date:today()});state.activities.push({text:`Completed ${d}-minute focus session on ${t}`,date:today()});save();}timer.seconds=timer.mode==="Focus"?1500:300;render()}
+function progress(){let avg=state.quizzes.length?Math.round(state.quizzes.reduce((a,q)=>a+q.score,0)/state.quizzes.length):0,total=state.sessions.reduce((a,s)=>a+s.duration,0);let topics=[];Object.entries(SUBJECTS).forEach(([s,d])=>d.topics.forEach(t=>{let a=accuracy(t);if(a!==null)topics.push({s,t,a})}));return title("Progress & Analytics","See how your study habits and quiz performance are changing.")+
+`<div class="grid stats"><div class="card stat"><div><div class="label">OVERALL QUIZ</div><div class="num">${avg}%</div></div><div class="statIcon">📈</div></div><div class="card stat"><div><div class="label">STUDY HOURS</div><div class="num">${(total/60).toFixed(1)}</div></div><div class="statIcon">⏱️</div></div><div class="card stat"><div><div class="label">TOPICS TRACKED</div><div class="num">${topics.length}</div></div><div class="statIcon">🎯</div></div><div class="card stat"><div><div class="label">ACHIEVEMENTS</div><div class="num">${achievements()}</div></div><div class="statIcon">🏆</div></div></div>
+<div class="grid two" style="margin-top:18px"><div class="card"><div class="sectionHead"><h3>Weekly Study Activity</h3></div><div class="chartBox">${last7().map(d=>{let n=state.sessions.filter(s=>s.date===d).reduce((a,s)=>a+s.duration,0);return `<div class="barCol"><div class="bar" style="height:${Math.min(100,Math.max(4,n/60*100))}%"></div><small>${new Date(d+"T00:00:00").toLocaleDateString(undefined,{weekday:"short"}).slice(0,3)}</small></div>`}).join("")}</div></div><div class="card"><div class="sectionHead"><h3>Topic Mastery</h3></div><div class="list">${topics.sort((a,b)=>a.a-b.a).map(x=>{let l=level(x.a);return `<div><div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:6px"><b>${esc(x.t)}</b><span class="tag ${l[1]}">${l[0]} · ${x.a}%</span></div><div class="progress"><i style="width:${x.a}%"></i></div></div>`}).join("")||empty("Take a quiz to begin.","Your mastery will appear here.")}</div></div></div>
+<div class="card" style="margin-top:18px"><div class="sectionHead"><h3>Achievements</h3></div><div class="grid three">${achievementList().map(a=>`<div class="item"><span style="font-size:22px">${a.icon}</span><div class="itemMain"><b>${a.label}</b><p>${a.done?"Unlocked":"Keep learning to unlock"}</p></div><span class="tag ${a.done?"green":""}">${a.done?"✓":"Locked"}</span></div>`).join("")}</div></div>`}
+function last7(){return Array.from({length:7},(_,i)=>addDays(i-6))}
+function streak(){let set=new Set(state.sessions.map(s=>s.date)),n=0,d=today();while(set.has(d)){n++;d=addDays(-n)}return n||0}
+function achievements(){return achievementList().filter(a=>a.done).length}
+function achievementList(){let topics=new Set(state.sessions.map(x=>x.subject+"::"+x.topic));return[{icon:"▶️",label:"First Study Session",done:state.sessions.length>=1},{icon:"🧠",label:"First Quiz",done:state.quizzes.length>=1},{icon:"🏆",label:"5 Quizzes Completed",done:state.quizzes.length>=5},{icon:"🔥",label:"7-Day Streak",done:streak()>=7},{icon:"🎯",label:"10 Topics Completed",done:topics.size>=10},{icon:"📝",label:"First Note Created",done:state.notes.length>=1}]}
+function historyPage(){return title("Study History","A searchable record of your learning activity.")+
+`<div class="card"><div class="sectionHead"><h3>All Activity</h3><select id="histFilter" class="btn" onchange="renderHistoryFilter()" style="width:160px"><option>All</option><option>Quiz</option><option>Study</option><option>Note</option></select></div><div id="historyList">${historyRows("All")}</div></div>`}
+function historyRows(f){let rows=[...state.activities].reverse();if(f!=="All")rows=rows.filter(x=>x.text.toLowerCase().includes(f==="Quiz"?"quiz":f==="Study"?"studied":"note"));return rows.map(x=>`<div class="item"><span>•</span><div class="itemMain"><b>${esc(x.text)}</b><p>${fmt(x.date)}</p></div></div>`).join("")||empty("No activity found.","Try another filter.")}
+function renderHistoryFilter(){document.getElementById("historyList").innerHTML=historyRows(document.getElementById("histFilter").value)}
+function settingsPage(){return title("Settings","Personalize StudyMate AI and your study experience.")+
+`<div class="grid two"><div class="card"><h3>Profile</h3><div class="formGrid" style="margin-top:15px"><div class="field"><label>NAME</label><input id="pname" value="${esc(state.user.name)}"></div><div class="field"><label>EMAIL</label><input id="pemail" value="${esc(state.user.email)}"></div><div class="field"><label>CLASS / GRADE</label><input id="pgrade" value="${esc(state.user.grade)}"></div><div class="field"><label>PREFERRED STUDY TIME</label><select id="ptime"><option ${state.user.studyTime==="Morning"?"selected":""}>Morning</option><option ${state.user.studyTime==="Afternoon"?"selected":""}>Afternoon</option><option ${state.user.studyTime==="Evening"?"selected":""}>Evening</option></select></div></div><button class="btn primary" style="margin-top:15px" onclick="saveProfile()">Save Profile</button></div><div class="card"><h3>Appearance & Notifications</h3><div class="field" style="margin-top:15px"><label>THEME</label><select id="theme"><option value="system">System</option><option value="light">Light</option><option value="dark">Dark</option></select></div><div class="item" style="margin-top:13px"><div class="itemMain"><b>Study reminders</b><p>Show helpful study and exam reminders.</p></div><input type="checkbox" id="notify" ${state.settings.notifications?"checked":""} onchange="state.settings.notifications=this.checked;save()"></div></div></div>
+<div class="card" style="margin-top:18px"><h3>Demo Data</h3><p class="muted">Reset the local demo to its original college-project presentation data.</p><button class="btn danger" style="margin-top:12px" onclick="resetData()">Reset Demo Data</button></div>`}
+function saveProfile(){state.user.name=document.getElementById("pname").value||"Student";state.user.email=document.getElementById("pemail").value;state.user.grade=document.getElementById("pgrade").value;state.user.studyTime=document.getElementById("ptime").value;save();render();toast("Profile updated")}
+function resetData(){if(confirm("Reset all StudyMate demo data?")){state=seed();save();render();toast("Demo data reset")}}
+function applyTheme(){let t=state.settings.theme;if(t==="system")t=matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light";document.documentElement.dataset.theme=t}
+function toggleTheme(){state.settings.theme=state.settings.theme==="dark"?"light":"dark";save();applyTheme();render()}
+function globalSearch(v){if(!v)return;let hits=[...state.notes.map(n=>"📝 "+n.title),...Object.entries(SUBJECTS).flatMap(([s,d])=>d.topics.map(t=>"📚 "+s+" · "+t)),...state.quizzes.map(q=>"🧠 "+q.topic)].filter(x=>x.toLowerCase().includes(v.toLowerCase())).slice(0,8);let old=document.getElementById("searchResults");if(old)old.remove();let e=document.createElement("div");e.id="searchResults";e.style.cssText="position:fixed;top:62px;left:270px;width:420px;max-width:calc(100vw - 290px);background:var(--surface);border:1px solid var(--line);border-radius:13px;box-shadow:var(--shadow);padding:8px;z-index:50";e.innerHTML=hits.length?hits.map(h=>`<div style="padding:9px;font-size:12px;border-radius:8px">${esc(h)}</div>`).join(""):`<div class="empty">No results</div>`;document.body.appendChild(e)}
+function modal(html){document.getElementById("modal").innerHTML=`<div class="modalBack" onclick="if(event.target===this)closeModal()"><div class="modal">${html}</div></div>`}
+function closeModal(){document.getElementById("modal").innerHTML=""}
+function go(p){page=p;document.getElementById("searchResults")?.remove();render()}
+function fmt(d){return new Date(d+"T00:00:00").toLocaleDateString(undefined,{month:"short",day:"numeric"})}
+function daysUntil(d){return Math.max(0,Math.ceil((new Date(d)-new Date(today()))/86400000))}
+function attach(){let th=document.getElementById("theme");if(th)th.value=state.settings.theme}
+function attachLogin(){}
+save();render();
+</script>
+<script>if("serviceWorker" in navigator) window.addEventListener("load",()=>navigator.serviceWorker.register("sw.js").catch(()=>{}));</script>
+</body>
+</html>
