@@ -17,6 +17,7 @@
 <body>
 <div id="root"></div>
 <script>
+window.GOOGLE_CLIENT_ID = "YOUR_GOOGLE_CLIENT_ID.apps.googleusercontent.com";
 const SUBJECTS={
  Mathematics:{icon:"📐",topics:["Algebra Basics","Quadratic Equations","Trigonometry","Geometry / Triangles","Probability","Calculus Basics"]},
  Physics:{icon:"⚛️",topics:["Motion","Newton's Laws","Electricity","Energy & Work","Waves & Sound"]},
@@ -115,9 +116,13 @@ const Q={
 ]
 };
 const KEY="studymate_v1";
+const CURRENT_USER_KEY="studymate_current_user";
+const USER_PREFIX="studymate_user_data_";
+const GOOGLE_CLIENT_ID = (window.GOOGLE_CLIENT_ID || "").trim();
 let state=load();
-function seed(){return{
-user:{name:"Manav",email:"student@example.com",grade:"College",subjects:["Mathematics","Physics","Chemistry","Biology"],goals:"Improve exam performance and understand concepts",studyTime:"Evening",hours:2},
+function getDefaultUserProfile(overrides={}){return{...{id:"demo-user",name:"Student",email:"student@example.com",grade:"College",subjects:["Mathematics","Physics","Chemistry","Biology"],goals:"Improve exam performance and understand concepts",studyTime:"Evening",hours:2},...overrides}};
+function seed(userProfile=getDefaultUserProfile()){return{
+user:userProfile,
 notes:[
 {id:1,subject:"Mathematics",topic:"Quadratic Equations",title:"Quadratic Equations — Key Formulas",content:"Quadratic formula: x = (-b ± √(b²-4ac)) / 2a\\n\\nDiscriminant D=b²-4ac:\\nD>0 → two distinct real roots\\nD=0 → one repeated real root\\nD<0 → no real roots."},
 {id:2,subject:"Physics",topic:"Motion",title:"Equations of Motion",content:"v = u + at\\ns = ut + ½at²\\nv² = u² + 2as\\n\\nu = initial velocity, v = final velocity, a = acceleration, t = time, s = displacement."}
@@ -156,8 +161,44 @@ cards:[
 activities:[{text:"Completed a Trigonometry quiz — 33% accuracy",date:daysAgo(2)},{text:"Created note: Quadratic Equations — Key Formulas",date:daysAgo(2)},{text:"Studied Motion for 28 minutes",date:daysAgo(2)}],
 settings:{theme:"system",notifications:true}
 }}
-function load(){try{return JSON.parse(localStorage.getItem(KEY))||seed()}catch{return seed()}}
-function save(){localStorage.setItem(KEY,JSON.stringify(state))}
+function loadUserData(userId){
+ try{ const raw=localStorage.getItem(USER_PREFIX + userId); if(!raw) return null; const parsed=JSON.parse(raw); return parsed && parsed.user ? parsed : null; }catch{return null}
+}
+function load(){
+ try{
+  const currentUserId = localStorage.getItem(CURRENT_USER_KEY) || "demo-user";
+  const saved = loadUserData(currentUserId);
+  if(saved) return saved;
+  const demoUser = getDefaultUserProfile({id:currentUserId,email:currentUserId === "demo-user" ? "student@example.com" : currentUserId});
+  return seed(demoUser);
+ }catch{return seed()}}
+function save(){
+ if(!state || !state.user) return;
+ const userId = state.user.id || state.user.email || "demo-user";
+ state.user.id = userId;
+ localStorage.setItem(USER_PREFIX + userId, JSON.stringify(state));
+ localStorage.setItem(CURRENT_USER_KEY, userId);
+ localStorage.setItem(KEY, JSON.stringify(state));
+}
+function userDisplayName(){
+ return (state && state.user && state.user.name && String(state.user.name).trim()) ? String(state.user.name).trim() : "Student";
+}
+function userGreetingLabel(){
+ const hour = new Date().getHours();
+ if(hour < 12) return "Good Morning";
+ if(hour < 18) return "Good Afternoon";
+ return "Good Evening";
+}
+function setActiveUser(userProfile, customState = null){
+ const baseProfile = getDefaultUserProfile();
+ const profile = { ...baseProfile, ...userProfile, id: userProfile && userProfile.id ? userProfile.id : (userProfile && userProfile.email ? userProfile.email : "demo-user") };
+ const nextState = customState && customState.user ? customState : seed(profile);
+ nextState.user = { ...profile, ...(nextState.user || {}), id: profile.id };
+ state = nextState;
+ save();
+ auth = true;
+ return state;
+}
 function today(){return new Date().toISOString().slice(0,10)}
 function addDays(n){let d=new Date();d.setDate(d.getDate()+n);return d.toISOString().slice(0,10)}
 function daysAgo(n){return addDays(-n)}
@@ -167,11 +208,33 @@ function initials(n){return (n||"S").split(" ").map(x=>x[0]).slice(0,2).join("")
 function accuracy(topic){let qs=state.quizzes.filter(q=>q.topic===topic);return qs.length?Math.round(qs.reduce((a,q)=>a+q.score,0)/qs.length):null}
 function weakTopic(){let all=[];state.quizzes.forEach(q=>{let x=all.find(a=>a.topic===q.topic);if(!x){x={topic:q.topic,subject:q.subject,s:0,n:0};all.push(x)}x.s+=q.score;x.n++});all=all.map(x=>({...x,a:Math.round(x.s/x.n)}));return all.sort((a,b)=>a.a-b.a)[0]||{topic:"Trigonometry",subject:"Mathematics",a:33}}
 function level(a){return a>=80?["Strong","green"]:a>=55?["Needs Practice","amber"]:["Weak","red"]}
+const tutorResponseCache={};
 function aiReply(message){
+ const key=String(message).trim().toLowerCase().replace(/\s+/g," ");
+ if(tutorResponseCache[key])return tutorResponseCache[key];
+ const response=aiReplyUncached(message);
+ tutorResponseCache[key]=response;
+ return response;
+}
+function aiReplyUncached(message){
  let m=message.toLowerCase(), w=weakTopic(), topic=null,subject=null;
+ const subjectAliases={Mathematics:["mathematics","math","maths"],Physics:["physics"],Chemistry:["chemistry","chem"],Biology:["biology","bio"],English:["english"],"Computer Science":["computer science","computer","coding","programming","software"]};
+ for(const [name,aliases] of Object.entries(subjectAliases))if(aliases.some(alias=>m.includes(alias))){subject=name;break}
+ const directDefinitions={
+  "arrays, linked lists, stacks, and queues":"Arrays store items in indexed positions, linked lists connect nodes with references, stacks follow Last In First Out, and queues follow First In First Out.",
+  "trees, graphs, and hash tables":"Trees organize data hierarchically, graphs represent connected items, and hash tables store key-value pairs for fast lookup.",
+  "choosing structures by access and update needs":"Choose a data structure based on the operations you need most: arrays are useful for indexed access, linked lists for frequent insertions, stacks for undo-style work, and queues for ordered processing.",
+  "time and space complexity":"Time complexity describes how runtime grows as input grows, while space complexity describes the extra memory an algorithm needs. Big O notation expresses these growth rates."
+ };
+ const directKey=Object.keys(directDefinitions).find(key=>m.includes(key));
+ if(directKey)return `**${directKey}**\n\n${directDefinitions[directKey]}\n\nExample: use a queue for print jobs because the first job added should normally be processed first.`;
  for(const s of Object.keys(SUBJECTS))for(const t of SUBJECTS[s].topics)if(m.includes(t.toLowerCase())){subject=s;topic=t}
- if(!topic){subject=subject||state.user.subjects[0]||"Mathematics";topic=Object.keys(Q).find(t=>m.includes(t.toLowerCase()))||w.topic}
+ const subjectOnly=Boolean(subject&&!topic);
+ const genericPrompt=/^(core definition|key relationships|typical examples|common mistakes)$/i.test(message.trim());
+ if(genericPrompt)return `Please tell me the subject or topic you want to study. For example, ask: “Explain Data Structures” or “Explain Quadratic Equations simply.”`;
+ if(!topic){topic=Object.keys(Q).find(t=>m.includes(t.toLowerCase()))||(subject?SUBJECTS[subject].topics[0]:w.topic);subject=subject||state.user.subjects[0]||"Mathematics"}
  const qs=Q[topic]||[];
+ if(subjectOnly)return `**${subject}**\n\nI can help you study ${subject}. Available topics include:\n${SUBJECTS[subject].topics.map((x,i)=>`${i+1}. ${x}`).join("\n")}\n\nAsk me to explain any topic, give an example, or quiz you.`;
  if(m.includes("quiz")||m.includes("test")) return `Let's practice **${topic}**.\\n\\nTry this without looking anything up:\\n${qs[0]?.[0]||"Explain one key idea from this topic."}\\n\\nSend your answer and I'll explain the reasoning.`;
  if(m.includes("example")) return `Worked-example approach for **${topic}**:\\n\\n1. Identify the information given.\\n2. Choose the relevant rule or formula.\\n3. Substitute carefully.\\n4. Check whether the result makes sense.\\n\\nFor this topic, start with **${SUBJECTS[subject]?.topics?.includes(topic)?"the core definition":"the key concept"}** and then apply it to a simple case.`;
  if(m.includes("summar")) return `**Quick revision — ${topic}**\\n\\n${topicConcepts(topic).map(x=>"• "+x).join("\\n")}\\n\\nBest next step: close your notes and explain the main idea in your own words.`;
@@ -186,15 +249,95 @@ function topicConcepts(t){
  "Motion":["Distance vs displacement","Speed vs velocity","Equations of motion","Acceleration"],
  "Newton's Laws":["Inertia","F=ma","Action and reaction","Free-body diagrams"],
  "Periodic Table":["Groups and periods","Atomic number and mass","Periodic trends","Metals and non-metals"],
- "Photosynthesis":["Light-dependent reactions","Calvin cycle","Chlorophyll","Factors affecting rate"]
+ "Photosynthesis":["Light-dependent reactions","Calvin cycle","Chlorophyll","Factors affecting rate"],
+ "JavaScript":["Variables, functions, and arrays","DOM manipulation and events","Async code and fetch()","Modern JS fundamentals"],
+ "Python":["Variables and control flow","Functions and loops","Lists, dictionaries, and files","Problem solving with Python"],
+ "Java":["Classes, objects, and methods","Inheritance and interfaces","Collections and APIs","Java application structure"],
+ "C++":["Variables, loops, and functions","Pointers and memory basics","Classes and OOP","Standard library usage"],
+ "C#":["Variables and methods","Classes and objects","Collections and LINQ","Dotnet application structure"],
+ "HTML":["Page structure and semantics","Forms and input elements","Layout and accessibility","Browser rendering basics"],
+ "SQL":["SELECT, WHERE, ORDER BY","Joins and relationships","Grouping and aggregate functions","Database design basics"],
+ "Data Structures":["Arrays, linked lists, stacks, and queues","Trees, graphs, and hash tables","Choosing structures by access and update needs","Time and space complexity"],
+ "Algorithms":["Searching and sorting strategies","Time and space complexity","Recursion and problem decomposition","Graphs and shortest paths"],
+ "Programming Basics":["Variables, data types, and operators","Conditions and loops","Functions and modular code","Debugging and testing"],
+ "Databases":["Tables, rows, columns, and keys","Relationships and normalization","Queries and transactions","Indexes and data integrity"]
  };
  return map[t]||["Core definition","Key relationships","Typical examples","Common mistakes"];
 }
 let page="dashboard", quiz=null, flashIndex=0, flashFlipped=false, timer={seconds:1500,running:false,mode:"Focus",interval:null}, auth=false;
 function render(){document.getElementById("root").innerHTML=auth?appHTML():loginHTML();if(auth){applyTheme();attach();}else attachLogin()}
-function loginHTML(){return `<div class="login"><div class="loginCard"><div class="loginBrand"><div class="logo">✦</div><h1>StudyMate AI</h1><p>Your Personal AI Study Companion</p></div><div class="tabs"><button class="active">Sign in</button><button onclick="guest()">Guest demo</button></div><div class="field"><label>EMAIL</label><input id="email" value="student@example.com"></div><div class="field" style="margin-top:12px"><label>PASSWORD</label><input id="password" type="password" value="demo123"></div><button class="btn primary" style="width:100%;margin-top:16px" onclick="doLogin()">Sign in</button><p class="muted" style="text-align:center;margin-top:13px">Demo mode uses local browser storage. No real account is created.</p><button class="btn" style="width:100%" onclick="guest()">Explore without account</button></div></div>`}
+function loginHTML(){return `<div class="login"><div class="loginCard"><div class="loginBrand"><div class="logo">✦</div><h1>StudyMate AI</h1><p>Your Personal AI Study Companion</p></div><div class="tabs"><button class="active">Sign in</button><button onclick="guest()">Guest demo</button></div><div id="authError" class="hidden" style="margin-top:12px;padding:10px 12px;border-radius:10px;background:rgba(213,72,72,.08);color:#b33333;border:1px solid rgba(213,72,72,.2);font-size:12px"></div><div class="field"><label>EMAIL</label><input id="email" value="student@example.com"></div><div class="field" style="margin-top:12px"><label>PASSWORD</label><input id="password" type="password" value="demo123"></div><button class="btn primary" style="width:100%;margin-top:16px" onclick="doLogin()">Sign in</button><div id="googleSignInBtn" style="width:100%;margin-top:12px"></div><p class="muted" style="text-align:center;margin-top:13px">Demo mode uses local browser storage. No real account is created.</p><button class="btn" style="width:100%" onclick="guest()">Explore without account</button></div></div>`}
+function showAuthError(message){const box=document.getElementById("authError"); if(!box) return; box.textContent=message; box.classList.remove("hidden");}
+function clearAuthError(){const box=document.getElementById("authError"); if(box){ box.classList.add("hidden"); box.textContent=""; }}
 function guest(){auth=true;toast("Guest demo started");render()}
-function doLogin(){auth=true;state.user.email=document.getElementById("email").value||state.user.email;save();toast("Welcome back!");render()}
+function doLogin(){
+ const email=document.getElementById("email").value?.trim() || state.user.email || "student@example.com";
+ const currentUser = loadUserData(email) || loadUserData("demo-user") || seed(getDefaultUserProfile({id:email,email}));
+ const profile = { ...getDefaultUserProfile(), ...(currentUser && currentUser.user ? currentUser.user : {}), id: email, email, name: (currentUser && currentUser.user && currentUser.user.name) || email.split("@")[0] };
+ setActiveUser(profile, currentUser || seed(profile));
+ auth=true;toast("Welcome back!");render();
+}
+function parseJwtPayload(token){
+ try{
+  const base64Url = token.split(".")[1];
+  const base64 = base64Url.replace(/-/g,"+").replace(/_/g,"/");
+  const padded = base64 + "=".repeat((4 - base64.length % 4) % 4);
+  const json = decodeURIComponent(atob(padded).split("").map((c)=>`%${("00" + c.charCodeAt(0).toString(16)).slice(-2)}`).join(""));
+  return JSON.parse(json);
+ }catch{return null}
+}
+function handleGoogleCredentialResponse(response){
+ if(!response || !response.credential){ showAuthError("Google sign-in failed. Please try again."); return; }
+ const jwt = parseJwtPayload(response.credential);
+ if(!jwt || !jwt.email){ showAuthError("Google returned incomplete profile data. Please try again."); return; }
+ const userId = "google_" + (jwt.sub || jwt.email);
+ const existing = loadUserData(userId) || null;
+ const profile = {id:userId,name:jwt.name || jwt.email.split("@")[0],email:jwt.email,grade:"College",subjects:["Mathematics","Physics","Chemistry","Biology"],goals:"Improve exam performance and understand concepts",studyTime:"Evening",hours:2};
+ const userState = existing || seed(profile);
+ userState.user = { ...getDefaultUserProfile(), ...userState.user, ...profile, id:userId, email:jwt.email, name: jwt.name || userState.user.name || profile.name };
+ setActiveUser(userState.user, userState);
+ clearAuthError();
+ toast("Welcome, " + userState.user.name + "!");
+ render();
+}
+function setupGoogleAuth(){
+ const clientId = (window.GOOGLE_CLIENT_ID || "").trim();
+ if(!clientId || clientId.includes("YOUR_")){
+  showAuthError("Google OAuth is not configured yet. Add your client ID in the app, then reload this page.");
+  return;
+ }
+ if(!window.google || !window.google.accounts || !window.google.accounts.id){
+  return;
+ }
+ google.accounts.id.initialize({client_id: clientId, callback: handleGoogleCredentialResponse, auto_select: false, cancel_on_tap_outside: true});
+ const btn = document.getElementById("googleSignInBtn");
+ if(btn && !btn.dataset.rendered){
+  google.accounts.id.renderButton(btn, {theme:"outline", size:"large", type:"standard", text:"continue_with", shape:"pill", width:320, locale:"en-US"});
+  btn.dataset.rendered = "true";
+ }
+}
+function loadGoogleClientScript(){
+ if(document.querySelector("script[data-google-client='true']")) return;
+ const script = document.createElement("script");
+ script.src = "https://accounts.google.com/gsi/client";
+ script.async = true;
+ script.defer = true;
+ script.dataset.googleClient = "true";
+ script.onload = function(){ setupGoogleAuth(); };
+ document.head.appendChild(script);
+}
+function attachLogin(){
+ clearAuthError();
+ const emailField = document.getElementById("email");
+ if(emailField) emailField.value = state.user.email || "student@example.com";
+ const btn = document.getElementById("googleSignInBtn");
+ if(btn && !btn.dataset.rendered){
+  loadGoogleClientScript();
+ }
+ if(window.google && window.google.accounts && window.google.accounts.id){
+  setupGoogleAuth();
+ }
+}
 function appHTML(){return `<div class="app"><aside class="sidebar" id="sidebar"><div class="brand"><div class="logo">✦</div><div><b>StudyMate AI</b><small>Your Personal AI Study Companion</small></div></div><nav class="nav">${navItems().map(([id,ico,label])=>`<button class="${page===id?"active":""}" onclick="go('${id}')"><span class="ico">${ico}</span>${label}</button>`).join("")}</nav><div class="profileMini"><div class="profileRow"><div class="avatar">${initials(state.user.name)}</div><div><b style="font-size:12px">${esc(state.user.name)}</b><div class="muted" style="font-size:10px">${esc(state.user.grade)}</div></div><button onclick="go('settings')">⚙</button></div><button class="btn" style="width:100%;margin-top:5px" onclick="auth=false;render()">Log out</button></div></aside><main class="main"><header class="topbar"><button class="mobileMenu" onclick="document.getElementById('sidebar').classList.toggle('open')">☰</button><div class="search"><span>⌕</span><input id="globalSearch" placeholder="Search notes, topics, quizzes..." oninput="globalSearch(this.value)"></div><div class="topActions"><button class="iconBtn" onclick="toggleTheme()" title="Theme">◐</button><button class="iconBtn" onclick="toast(state.settings.notifications?'Study reminder: Trigonometry is on today’s plan.':'Notifications are off')">🔔</button><button class="iconBtn" onclick="go('settings')">⚙</button></div></header><div class="content">${pageHTML()}</div></main><div id="modal"></div></div>`}
 function navItems(){return [["dashboard","🏠","Dashboard"],["tutor","🤖","AI Tutor"],["subjects","📚","Subjects"],["notes","📝","Notes"],["flashcards","🃏","Flashcards"],["quizzes","🧠","Quizzes"],["planner","📅","Study Planner"],["timer","⏱️","Focus Timer"],["progress","📊","Progress"],["exam","🎯","Exam Prep"],["history","🕘","Study History"],["settings","⚙️","Settings"]]}
 function pageHTML(){
@@ -216,7 +359,8 @@ function pageHTML(){
 function title(t,s){return `<div class="pageTitle"><div><h1>${t}</h1><p>${s}</p></div></div>`}
 function dashboard(){
  let w=weakTopic(), totalMin=state.sessions.reduce((a,s)=>a+s.duration,0), avg=state.quizzes.length?Math.round(state.quizzes.reduce((a,q)=>a+q.score,0)/state.quizzes.length):0;
- return title(`Good ${new Date().getHours()<12?"morning":new Date().getHours()<18?"afternoon":"evening"}, ${esc(state.user.name)} 👋`,"Let's make progress today.")+`
+ const greeting = userGreetingLabel();
+ return title(`${greeting}, ${esc(userDisplayName())} 👋`,`Let's make progress today.`)+`
  <div class="grid stats">
  <div class="card stat"><div><div class="label">STUDY TIME</div><div class="num">${Math.floor(totalMin/60)}h ${totalMin%60}m</div><div class="sub">Total logged</div></div><div class="statIcon">⏱️</div></div>
  <div class="card stat"><div><div class="label">TASKS DONE</div><div class="num">${state.plan.filter(x=>x.status==="Completed").length}</div><div class="sub">Across your plan</div></div><div class="statIcon">✓</div></div>
@@ -235,7 +379,7 @@ function tutor(){return title("AI Tutor","Learn concepts, practise actively, and
 `<div class="card chat"><div class="messages" id="messages"><div class="msg ai">Hi ${esc(state.user.name)}! 👋 I’m your StudyMate AI tutor. Ask me about Math, Physics, Chemistry, Biology, English, or Computer Science.<br><br>Try: “Explain quadratic equations simply.”</div></div><div class="quick">${["Explain Simply","Give Example","Quiz Me","Summarize","Practice Questions","Explain Step-by-Step"].map(x=>`<button class="btn small" onclick="quickTutor('${x}')">${x}</button>`).join("")}</div><div class="composer"><textarea id="tutorInput" placeholder="Ask a study question..."></textarea><button class="btn primary" onclick="sendTutor()">Send</button></div></div>`}
 function sendTutor(){let el=document.getElementById("tutorInput"),m=el.value.trim();if(!m)return;addMessage(m,"user");el.value="";setTimeout(()=>addMessage(aiReply(m),"ai"),300)}
 function quickTutor(x){document.getElementById("tutorInput").value=x+" about "+weakTopic().topic;sendTutor()}
-function addMessage(t,c){let box=document.getElementById("messages");if(!box)return;let d=document.createElement("div");d.className="msg "+c;d.textContent=t;box.appendChild(d);box.scrollTop=box.scrollHeight}
+function addMessage(t,c){let box=document.getElementById("messages");if(!box)return;let d=document.createElement("div");d.className="msg "+c;let text=String(t).replace(/\\n/g,"\n");d.innerHTML=esc(text).replace(/\*\*(.*?)\*\*/g,"<strong>$1</strong>").replace(/\n/g,"<br>");box.appendChild(d);box.scrollTop=box.scrollHeight}
 function subjects(){return title("Subjects","Explore the built-in academic topic database and jump straight into learning.")+
 `<div class="grid subjectGrid">${Object.entries(SUBJECTS).map(([s,d])=>{let vals=d.topics.map(t=>accuracy(t)).filter(x=>x!==null);let a=vals.length?Math.round(vals.reduce((x,y)=>x+y,0)/vals.length):0;return `<div class="card subjectCard"><div class="subjectIcon">${d.icon}</div><h3>${s}</h3><p>${d.topics.length} topics · ${a? a+"% tracked accuracy":"Not started"}</p><div class="progress"><i style="width:${a}%"></i></div><button class="btn primary small" onclick="subjectModal('${esc(s)}')">View topics</button></div>`}).join("")}</div>`}
 function subjectModal(s){let d=SUBJECTS[s];modal(`<h2>${d.icon} ${esc(s)}</h2><p>Choose a topic to learn, quiz, or revise.</p><div class="list" style="margin-top:15px">${d.topics.map(t=>{let a=accuracy(t);return `<div class="item"><div class="itemMain"><b>${esc(t)}</b><p>${a===null?"No attempts yet":a+"% quiz accuracy"}</p></div><button class="btn small" onclick="openTutorTopic('${esc(t)}');closeModal()">Tutor</button><button class="btn primary small" onclick="newQuiz('${esc(s)}','${esc(t)}');closeModal()">Quiz</button></div>`}).join("")}</div>`)}
@@ -256,9 +400,11 @@ function generateCards(){let w=weakTopic(), qs=Q[w.topic]||[];qs.slice(0,4).forE
 function quizzes(){if(quiz)return quizHTML();return title("Quizzes","Generate practice quizzes, get explanations, and turn results into targeted revision.")+
 `<div class="grid three"><div class="card"><div class="statIcon">⚡</div><h3>Quick Quiz</h3><p class="muted">5 questions on a topic.</p><button class="btn primary" onclick="quizModal()">Create Quiz</button></div><div class="card"><div class="statIcon">🎓</div><h3>Exam Level</h3><p class="muted">Timed, exam-style practice.</p><button class="btn" onclick="quizModal(true)">Start Mock Quiz</button></div><div class="card"><div class="statIcon">🎯</div><h3>Weak Topic</h3><p class="muted">Focus on ${esc(weakTopic().topic)}.</p><button class="btn" onclick="newQuiz('${esc(weakTopic().subject)}','${esc(weakTopic().topic)}')">Practice Weak Topic</button></div></div>
  <div class="card" style="margin-top:18px"><div class="sectionHead"><h3>Quiz History</h3></div><table class="table"><tr><th>SUBJECT</th><th>TOPIC</th><th>SCORE</th><th>DATE</th></tr>${state.quizzes.slice().reverse().map(q=>`<tr><td>${esc(q.subject)}</td><td>${esc(q.topic)}</td><td><b>${q.score}%</b></td><td>${fmt(q.date)}</td></tr>`).join("")}</table></div>`}
-function quizModal(mock=false){modal(`<h2>${mock?"Mock Test":"Create Quiz"}</h2><p>Questions are generated from StudyMate's academic question bank for this demo.</p><div class="formGrid" style="margin-top:15px"><div class="field"><label>SUBJECT</label><select id="qsub">${Object.keys(SUBJECTS).map(s=>`<option>${s}</option>`).join("")}</select></div><div class="field"><label>TOPIC</label><select id="qtopic">${Object.values(SUBJECTS)[0].topics.map(t=>`<option>${t}</option>`).join("")}</select></div><div class="field"><label>QUESTIONS</label><select id="qcount"><option>5</option><option>10</option></select></div><div class="field"><label>DIFFICULTY</label><select id="qdiff"><option>Medium</option><option>Easy</option><option>Hard</option><option>Exam Level</option></select></div></div><div class="formActions"><button class="btn" onclick="closeModal()">Cancel</button><button class="btn primary" onclick="createQuizFromModal()">Start</button></div>`)}
+function quizModal(mock=false){modal(`<h2>${mock?"Mock Test":"Create Quiz"}</h2><p>Questions are generated from StudyMate's academic question bank for this demo.</p><div class="formGrid" style="margin-top:15px"><div class="field"><label>SUBJECT</label><select id="qsub" onchange="updateQuizTopics()">${Object.keys(SUBJECTS).map(s=>`<option>${s}</option>`).join("")}</select></div><div class="field"><label>TOPIC</label><select id="qtopic">${SUBJECTS.Mathematics.topics.map(t=>`<option>${t}</option>`).join("")}</select></div><div class="field"><label>QUESTIONS</label><select id="qcount"><option>5</option><option>10</option></select></div><div class="field"><label>DIFFICULTY</label><select id="qdiff"><option>Medium</option><option>Easy</option><option>Hard</option><option>Exam Level</option></select></div></div><div class="formActions"><button class="btn" onclick="closeModal()">Cancel</button><button class="btn primary" onclick="createQuizFromModal()">Start</button></div>`)}
+function updateQuizTopics(){let subject=document.getElementById("qsub")?.value,topicSelect=document.getElementById("qtopic");if(!topicSelect||!SUBJECTS[subject])return;topicSelect.innerHTML=SUBJECTS[subject].topics.map(t=>`<option>${t}</option>`).join("")}
 function createQuizFromModal(){newQuiz(document.getElementById("qsub").value,document.getElementById("qtopic").value,Number(document.getElementById("qcount").value));closeModal()}
-function newQuiz(subject,topic,count=5){let bank=Q[topic]||[];if(!bank.length){toast("This topic has no demo questions yet.");return}let arr=[];for(let i=0;i<count;i++)arr.push(bank[i%bank.length]);quiz={subject,topic,questions:arr,idx:0,answers:[],score:0,started:Date.now()};page="quizzes";render()}
+function quizBank(subject,topic){if(Q[topic]?.length)return Q[topic];return [[`Which statement is most closely related to ${topic}?`,[`It is a core ${subject} concept`,`It is unrelated to ${subject}`,"It only applies to mathematics","It cannot be studied"],0,`${topic} is included as a topic in ${subject}. Review the definition, examples, and common applications.`]]}
+function newQuiz(subject,topic,count=5){let bank=quizBank(subject,topic),arr=[];for(let i=0;i<count;i++)arr.push(bank[i%bank.length]);quiz={subject,topic,questions:arr,idx:0,answers:[],score:0,started:Date.now()};page="quizzes";render()}
 function quizHTML(){let q=quiz.questions[quiz.idx],answered=quiz.answers[quiz.idx]!=null;return title("Interactive Quiz",`${esc(quiz.subject)} · ${esc(quiz.topic)}`)+`<div class="card"><div class="sectionHead"><span class="tag primary">Question ${quiz.idx+1} / ${quiz.questions.length}</span><span class="muted">${Math.round((quiz.idx/quiz.questions.length)*100)}% complete</span></div><div class="progress"><i style="width:${((quiz.idx)/quiz.questions.length)*100}%"></i></div><h2 style="margin:24px 0 12px">${esc(q[0])}</h2><div>${q[1].map((o,i)=>`<button class="quizOption ${answered?(i===q[2]?"correct":quiz.answers[quiz.idx]===i?"wrong":""):(quiz.answers[quiz.idx]===i?"selected":"")}" onclick="answerQuiz(${i})" ${answered?"disabled":""}>${String.fromCharCode(65+i)}. ${esc(o)}</button>`).join("")}</div>${answered?`<div class="notice" style="margin-top:14px;background:${quiz.answers[quiz.idx]===q[2]?"var(--greenSoft)":"var(--redSoft)"};color:${quiz.answers[quiz.idx]===q[2]?"var(--green)":"var(--red)"}"><b>${quiz.answers[quiz.idx]===q[2]?"Correct!":"Not quite."}</b> ${esc(q[3])}</div><button class="btn primary" style="margin-top:14px" onclick="nextQuiz()">${quiz.idx===quiz.questions.length-1?"See Result":"Next Question →"}</button>`:""} </div>`}
 function answerQuiz(i){if(quiz.answers[quiz.idx]!=null)return;quiz.answers[quiz.idx]=i;render()}
 function nextQuiz(){if(quiz.idx<quiz.questions.length-1){quiz.idx++;render()}else finishQuiz()}
