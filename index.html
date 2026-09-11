@@ -161,6 +161,17 @@ cards:[
 activities:[{text:"Completed a Trigonometry quiz — 33% accuracy",date:daysAgo(2)},{text:"Created note: Quadratic Equations — Key Formulas",date:daysAgo(2)},{text:"Studied Motion for 28 minutes",date:daysAgo(2)}],
 settings:{theme:"system",notifications:true}
 }}
+function createNewUserState(userProfile=getDefaultUserProfile()){
+ const fresh=seed(userProfile);
+ fresh.notes=[];
+ fresh.quizzes=[];
+ fresh.sessions=[];
+ fresh.plan=[];
+ fresh.exams=[];
+ fresh.cards=[];
+ fresh.activities=[];
+ return fresh;
+}
 function loadUserData(userId){
  try{ const raw=localStorage.getItem(USER_PREFIX + userId); if(!raw) return null; const parsed=JSON.parse(raw); return parsed && parsed.user ? parsed : null; }catch{return null}
 }
@@ -170,7 +181,7 @@ function load(){
   const saved = loadUserData(currentUserId);
   if(saved) return saved;
   const demoUser = getDefaultUserProfile({id:currentUserId,email:currentUserId === "demo-user" ? "student@example.com" : currentUserId});
-  return seed(demoUser);
+    return currentUserId === "demo-user" ? seed(demoUser) : createNewUserState(demoUser);
  }catch{return seed()}}
 function save(){
  if(!state || !state.user) return;
@@ -272,7 +283,7 @@ function clearAuthError(){const box=document.getElementById("authError"); if(box
 function guest(){auth=true;toast("Guest demo started");render()}
 function doLogin(){
  const email=document.getElementById("email").value?.trim() || state.user.email || "student@example.com";
- const currentUser = loadUserData(email) || loadUserData("demo-user") || seed(getDefaultUserProfile({id:email,email}));
+ const currentUser = loadUserData(email) || createNewUserState(getDefaultUserProfile({id:email,email}));
  const profile = { ...getDefaultUserProfile(), ...(currentUser && currentUser.user ? currentUser.user : {}), id: email, email, name: (currentUser && currentUser.user && currentUser.user.name) || email.split("@")[0] };
  setActiveUser(profile, currentUser || seed(profile));
  auth=true;toast("Welcome back!");render();
